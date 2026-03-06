@@ -1,0 +1,177 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------
+// USUÁRIOS E AUTENTICAÇÃO
+// ---------------------------------------------------------
+
+enum UserRole {
+  ADMIN
+  EDITOR
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String
+  role      UserRole @default(EDITOR)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ---------------------------------------------------------
+// CONTEÚDO DO SITE (CMS)
+// ---------------------------------------------------------
+
+model BlogPost {
+  id          String   @id @default(uuid())
+  slug        String   @unique
+  title       String
+  subtitle    String?
+  content     String   @db.Text
+  imageUrl    String?
+  publishDate DateTime @default(now())
+  featured    Boolean  @default(false)
+  tags        String[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum CourseMode {
+  EAD
+  PRESENCIAL
+  HIBRIDO
+}
+
+model Course {
+  id                  Int                 @id @default(autoincrement())
+  slug                String              @unique
+  title               String
+  category            String
+  imageUrl            String?
+  mode                CourseMode
+  duration            String
+  hours               String
+  tag                 String?
+  description         String              @db.Text
+  fullDescription     String              @db.Text
+  requirements        String?
+  certificationType   String?
+  salary              String?
+  marketInfo          String?             @db.Text
+  objectives          CourseObjective[]
+  curriculum          CourseModule[]
+  careerOpportunities CourseOpportunity[]
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+}
+
+model CourseObjective {
+  id       Int    @id @default(autoincrement())
+  text     String
+  courseId Int
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+}
+
+model CourseModule {
+  id       Int           @id @default(autoincrement())
+  title    String
+  courseId Int
+  course   Course        @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  topics   CourseTopic[]
+}
+
+model CourseTopic {
+  id       Int          @id @default(autoincrement())
+  name     String
+  moduleId Int
+  module   CourseModule @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+}
+
+model CourseOpportunity {
+  id       Int    @id @default(autoincrement())
+  name     String
+  courseId Int
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+}
+
+model Testimonial {
+  id         Int     @id @default(autoincrement())
+  name       String
+  courseName String?
+  text       String  @db.Text
+  videoId    String?
+  imageUrl   String?
+  active     Boolean @default(true)
+}
+
+model FAQ {
+  id       Int    @id @default(autoincrement())
+  question String
+  answer   String @db.Text
+  order    Int    @default(0)
+}
+
+model Unit {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String?
+  latitude    Float
+  longitude   Float
+  address     String?
+  phone       String?
+  whatsapp    String?
+}
+
+model GalleryImage {
+  id       Int     @id @default(autoincrement())
+  title    String?
+  imageUrl String
+  category String?
+}
+
+model Stat {
+  id    Int     @id @default(autoincrement())
+  label String
+  value String
+  icon  String?
+}
+
+// ---------------------------------------------------------
+// CAPTURA DE DADOS (FORMULÁRIOS)
+// ---------------------------------------------------------
+
+enum ApplicationStatus {
+  PENDING
+  REVIEWED
+  ARCHIVED
+}
+
+model JobApplication {
+  id        Int               @id @default(autoincrement())
+  firstName String
+  lastName  String
+  phone     String
+  email     String
+  role      String
+  city      String
+  cvFileUrl String?
+  status    ApplicationStatus @default(PENDING)
+  createdAt DateTime          @default(now())
+}
+
+model Lead {
+  id             Int      @id @default(autoincrement())
+  name           String
+  phone          String
+  courseInterest String?
+  city           String?
+  createdAt      DateTime @default(now())
+}
