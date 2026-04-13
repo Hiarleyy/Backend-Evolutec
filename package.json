@@ -1,27 +1,40 @@
 {
   "name": "backend-evolutec",
   "version": "1.0.0",
-  "private": true,
-  "type": "commonjs",
-  "main": "server.js",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js",
-    "prisma:migrate": "prisma migrate dev",
-    "prisma:seed": "node prisma/seed.js",
-    "prisma:studio": "prisma studio"
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "db:migrate": "npx prisma migrate dev",
+    "db:seed": "node prisma/seed.js",
+    "db:studio": "npx prisma studio"
   },
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hiarleyy/Backend-Evolutec.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Hiarleyy/Backend-Evolutec/issues"
+  },
+  "homepage": "https://github.com/Hiarleyy/Backend-Evolutec#readme",
   "dependencies": {
-    "@prisma/client": "5.10.0",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "express": "^4.21.2",
-    "multer": "^1.4.5-lts.2",
-    "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.1"
+    "@prisma/client": "^7.4.2",
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "multer": "^2.1.1"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10",
-    "prisma": "5.10.0"
+    "prisma": "^7.4.2"
   }
 }
