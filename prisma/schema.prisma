@@ -1,0 +1,120 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Course {
+  id                   Int     @id @default(autoincrement())
+  slug                 String  @unique
+  title                String
+  category             String
+  image                String
+  mode                 String
+  duration             String
+  hours                Int
+  tag                  String
+  description          String
+  fullDescription      String  @db.Text
+  objectives           String[]
+  curriculum           String[]
+  careerOpportunities  String[]
+  requirements         String[]
+  certificationType    String
+  salary               String
+  marketInfo           String  @db.Text
+  destaque             Boolean @default(false)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  @@map("courses")
+}
+
+model BlogPost {
+  id        Int     @id @default(autoincrement())
+  slug      String  @unique
+  imagem    String
+  tags      String[]
+  titulo    String
+  subtitulo String
+  data      String
+  conteudo  String  @db.Text
+  destaque  Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("blog_posts")
+}
+
+model Ebook {
+  id            Int     @id @default(autoincrement())
+  slug          String  @unique
+  titulo        String
+  descricao     String  @db.Text
+  categoria     String
+  capa          String
+  caminho       String?
+  downloadUrl   String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  leads         LeadEbook[]
+
+  @@map("ebooks")
+}
+
+model Lead {
+  id                Int        @id @default(autoincrement())
+  type              LeadType
+  email             String
+  name              String
+  phone            String?
+  message          String?    @db.Text
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+  
+  // Contact lead specific
+  
+  // Ebook download lead specific
+  ebookLead         LeadEbook?
+
+  @@map("leads")
+}
+
+model LeadEbook {
+  id          Int     @id @default(autoincrement())
+  leadId      Int     @unique
+  lead        Lead    @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  ebookId     Int
+  ebook       Ebook   @relation(fields: [ebookId], references: [id])
+  ebookTitulo String?
+  downloadUrl String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("lead_ebooks")
+}
+
+model SiteSettings {
+  id                    Int     @id @default(autoincrement())
+  telefoneWhatsApp      String
+  emailContato          String
+  linksRedesSociais     Json
+  enderecoOuUnidades   Json
+  mapaLatitude          Float?
+  mapaLongitude         Float?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  @@map("site_settings")
+}
+
+enum LeadType {
+  CONTACT
+  EBOOK
+}
