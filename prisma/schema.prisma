@@ -7,43 +7,42 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-<<<<<<< HEAD
 model Course {
-  id                   Int     @id @default(autoincrement())
-  slug                 String  @unique
-  title                String
-  category             String
-  image                String
-  mode                 String
-  duration             String
-  hours                Int
-  tag                  String
-  description          String
-  fullDescription      String  @db.Text
-  objectives           String[]
-  curriculum           String[]
-  careerOpportunities  String[]
-  requirements         String[]
-  certificationType    String
-  salary               String
-  marketInfo           String  @db.Text
-  destaque             Boolean @default(false)
-  createdAt            DateTime @default(now())
-  updatedAt            DateTime @updatedAt
+  id                  Int      @id @default(autoincrement())
+  slug                String   @unique
+  title               String
+  category            String
+  image               String
+  mode                String
+  duration            String
+  hours               Int
+  tag                 String
+  description         String
+  fullDescription     String   @db.Text
+  objectives          String[]
+  curriculum          String[]
+  careerOpportunities String[]
+  requirements        String[]
+  certificationType   String
+  salary              String
+  marketInfo          String   @db.Text
+  destaque            Boolean  @default(false)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 
   @@map("courses")
 }
 
 model BlogPost {
-  id        Int     @id @default(autoincrement())
-  slug      String  @unique
+  id        Int      @id @default(autoincrement())
+  slug      String   @unique
   imagem    String
   tags      String[]
   titulo    String
   subtitulo String
   data      String
-  conteudo  String  @db.Text
-  destaque  Boolean @default(false)
+  conteudo  String   @db.Text
+  destaque  Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -51,45 +50,43 @@ model BlogPost {
 }
 
 model Ebook {
-  id            Int     @id @default(autoincrement())
-  slug          String  @unique
+  id          Int      @id @default(autoincrement())
+  slug        String   @unique
   titulo        String
-  descricao     String  @db.Text
-  categoria     String
-  capa          String
-  caminho       String?
-  downloadUrl   String
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  leads         LeadEbook[]
+  descricao   String   @db.Text
+  categoria   String
+  capa        String
+  caminho     String?
+  downloadUrl String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  leads       LeadEbook[]
 
   @@map("ebooks")
 }
 
 model Lead {
-  id                Int        @id @default(autoincrement())
-  type              LeadType
-  email             String
-  name              String
+  id               Int        @id @default(autoincrement())
+  type             LeadType?
+  email            String?
+  name             String
   phone            String?
   message          String?    @db.Text
-  createdAt         DateTime   @default(now())
-  updatedAt         DateTime   @updatedAt
-  
-  // Contact lead specific
-  
-  // Ebook download lead specific
-  ebookLead         LeadEbook?
+  courseInterest   String?
+  city             String?
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+  ebookLead        LeadEbook?
 
   @@map("leads")
 }
 
 model LeadEbook {
-  id          Int     @id @default(autoincrement())
-  leadId      Int     @unique
-  lead        Lead    @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  id          Int      @id @default(autoincrement())
+  leadId      Int      @unique
+  lead        Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
   ebookId     Int
-  ebook       Ebook   @relation(fields: [ebookId], references: [id])
+  ebook       Ebook    @relation(fields: [ebookId], references: [id])
   ebookTitulo String?
   downloadUrl String?
   createdAt   DateTime @default(now())
@@ -99,15 +96,15 @@ model LeadEbook {
 }
 
 model SiteSettings {
-  id                    Int     @id @default(autoincrement())
-  telefoneWhatsApp      String
-  emailContato          String
-  linksRedesSociais     Json
-  enderecoOuUnidades   Json
-  mapaLatitude          Float?
-  mapaLongitude         Float?
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
+  id                 Int      @id @default(autoincrement())
+  telefoneWhatsApp   String
+  emailContato       String
+  linksRedesSociais  Json
+  enderecoOuUnidades Json
+  mapaLatitude       Float?
+  mapaLongitude      Float?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 
   @@map("site_settings")
 }
@@ -115,10 +112,7 @@ model SiteSettings {
 enum LeadType {
   CONTACT
   EBOOK
-=======
-// ---------------------------------------------------------
-// USUÁRIOS E AUTENTICAÇÃO
-// ---------------------------------------------------------
+}
 
 enum UserRole {
   ADMIN
@@ -133,82 +127,6 @@ model User {
   role      UserRole @default(EDITOR)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-}
-
-// ---------------------------------------------------------
-// CONTEÚDO DO SITE (CMS)
-// ---------------------------------------------------------
-
-model BlogPost {
-  id          String   @id @default(uuid())
-  slug        String   @unique
-  title       String
-  subtitle    String?
-  content     String   @db.Text
-  imageUrl    String?
-  publishDate DateTime @default(now())
-  featured    Boolean  @default(false)
-  tags        String[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
-
-enum CourseMode {
-  EAD
-  PRESENCIAL
-  HIBRIDO
-}
-
-model Course {
-  id                  Int                 @id @default(autoincrement())
-  slug                String              @unique
-  title               String
-  category            String
-  imageUrl            String?
-  mode                CourseMode
-  duration            String
-  hours               String
-  tag                 String?
-  description         String              @db.Text
-  fullDescription     String              @db.Text
-  requirements        String?
-  certificationType   String?
-  salary              String?
-  marketInfo          String?             @db.Text
-  objectives          CourseObjective[]
-  curriculum          CourseModule[]
-  careerOpportunities CourseOpportunity[]
-  createdAt           DateTime            @default(now())
-  updatedAt           DateTime            @updatedAt
-}
-
-model CourseObjective {
-  id       Int    @id @default(autoincrement())
-  text     String
-  courseId Int
-  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
-}
-
-model CourseModule {
-  id       Int           @id @default(autoincrement())
-  title    String
-  courseId Int
-  course   Course        @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  topics   CourseTopic[]
-}
-
-model CourseTopic {
-  id       Int          @id @default(autoincrement())
-  name     String
-  moduleId Int
-  module   CourseModule @relation(fields: [moduleId], references: [id], onDelete: Cascade)
-}
-
-model CourseOpportunity {
-  id       Int    @id @default(autoincrement())
-  name     String
-  courseId Int
-  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 }
 
 model Testimonial {
@@ -274,14 +192,4 @@ model JobApplication {
   cvFileUrl String?
   status    ApplicationStatus @default(PENDING)
   createdAt DateTime          @default(now())
-}
-
-model Lead {
-  id             Int      @id @default(autoincrement())
-  name           String
-  phone          String
-  courseInterest String?
-  city           String?
-  createdAt      DateTime @default(now())
->>>>>>> df976e2ce62af527832cd2a840556a9ba56b33fe
 }

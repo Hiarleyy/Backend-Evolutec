@@ -1,0 +1,45 @@
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Build and coverage
+dist/
+build/
+coverage/
+.nyc_output/
+
+# Runtime files
+pids/
+*.pid
+*.pid.lock
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Prisma / databases (local)
+prisma/dev.db
+prisma/dev.db-journal
+*.sqlite
+*.sqlite-journal
+src/database/data/
+
+# Uploads and generated assets
+uploads/*
+!uploads/.gitkeep
+ebooks/*
+!ebooks/.gitkeep
